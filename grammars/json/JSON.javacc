@@ -1,0 +1,103 @@
+options {
+  PARSER_PACKAGE="json";
+  NODE_PACKAGE="json.ast";
+}
+
+SKIP :
+{
+  <WHITESPACE : (" "| "\t"| "\n"| "\r")+> 
+}
+
+// Delimiters
+TOKEN : 
+{
+    <TRUE: "true">
+    |
+    <FALSE: "false">
+    |
+    <NULL: "null">
+    |
+    <COLON : ":">
+    |
+    <COMMA : ",">
+    |
+    <OPEN_BRACKET : "[">
+    |
+    <CLOSE_BRACKET : "]">
+    |
+    <OPEN_BRACE : "{" >
+    |
+    <CLOSE_BRACE : "}">
+}
+
+// String Literal
+TOKEN : 
+{
+  <#ESCAPE1 : "\\" (["\\", "\"", "/","b","f","n","r","t"])>
+  |
+  <#ESCAPE2 : "\\u" (["0"-"9", "a"-"f", "A"-"F"]) {4}>
+  |
+  <#REGULAR_CHAR : ~["\"","\\"]>
+  |
+  <STRING_LITERAL : "\"" (<REGULAR_CHAR>|<ESCAPE2>|<ESCAPE1>)* "\"">
+}
+
+// Number Literal
+TOKEN: 
+{
+	<#ZERO : "0">
+ |
+ <#NON_ZERO : (["1"-"9"])(["0"-"9"])*>
+ |
+ <#FRACTION : "." (["0"-"9"])+>
+ |
+ <#EXPONENT : ["E","e"]["+","-"](["1"-"9"])+>
+ | 
+ <NUMBER : ("-")?(<ZERO>|<NON_ZERO>(<FRACTION>)?(<EXPONENT>)?)>
+}
+
+
+void Array() : {}
+{
+
+    <OPEN_BRACKET>
+    [
+      Value() 
+      (
+        <COMMA>
+        Value()
+      )*
+    ]
+    <CLOSE_BRACKET>
+}
+
+void Value() : {}
+{
+   (
+    <TRUE>
+    |
+    <FALSE>
+    |
+    <NULL>
+    |
+    <STRING_LITERAL>
+    |
+    <NUMBER>
+    |
+    Array()
+    |
+    JSONObject()
+   )
+}
+
+void JSONObject() : {}
+{
+    <OPEN_BRACE>
+    [
+       <STRING_LITERAL> <COLON> Value()
+       (<COMMA>
+        <STRING_LITERAL><COLON>Value()
+       )*
+    ]
+    <CLOSE_BRACE>
+}
