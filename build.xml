@@ -1,0 +1,11 @@
+<project name="stuff" default="json">
+  <target name="json">
+    <ant antfile="build.xml" dir="grammars/json" target="compile"/>
+    <echo>
+      You should be able to test the JSON Grammar(s) via:
+      java -cp ./grammars/json JSONTest &lt;filenames&gt;
+        or if your JSON files have comments in them:
+      java -cp ./grammars/json JSONCTest &lt;filenames&gt;
+    </echo>
+  </target>
+</project>
