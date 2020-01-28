@@ -37,7 +37,7 @@ TOKEN :
   |
   <#ESCAPE2 : "\\u" (["0"-"9", "a"-"f", "A"-"F"]) {4}>
   |
-  <#REGULAR_CHAR : ~["\"","\\"]>
+  <#REGULAR_CHAR : ~["\u0000"-"\u001F","\"","\\"]>
   |
   <STRING_LITERAL : "\"" (<REGULAR_CHAR>|<ESCAPE2>|<ESCAPE1>)* "\"">
 }
@@ -53,7 +53,7 @@ TOKEN:
  |
  <#EXPONENT : ["E","e"]["+","-"](["1"-"9"])+>
  | 
- <NUMBER : ("-")?(<ZERO>|<NON_ZERO>(<FRACTION>)?(<EXPONENT>)?)>
+ <NUMBER : ("-")?(<ZERO>|<NON_ZERO>)(<FRACTION>)?(<EXPONENT>)?>
 }
 
 
@@ -95,7 +95,8 @@ void JSONObject() : {}
     <OPEN_BRACE>
     [
        <STRING_LITERAL> <COLON> Value()
-       (<COMMA>
+       (
+         <COMMA>
         <STRING_LITERAL><COLON>Value()
        )*
     ]

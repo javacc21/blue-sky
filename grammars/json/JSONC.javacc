@@ -1,6 +1,7 @@
 options {
     PARSER_PACKAGE="jsonc";
     SPECIAL_TOKENS_ARE_NODES;
+//  TREE_BUILDING_ENABLED=false;
 }
 
 SPECIAL_TOKEN :
