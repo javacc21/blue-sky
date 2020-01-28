@@ -4,7 +4,7 @@ options {
 //  TREE_BUILDING_ENABLED=false;
 }
 
-SPECIAL_TOKEN :
+SPECIAL_TOKEN #Comment :
 {
     <SINGLE_LINE_COMMENT : "//" (~["\n","\r"])*  ("\n"|"\r"|"\r\n") >
     |

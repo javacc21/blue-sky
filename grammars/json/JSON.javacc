@@ -9,14 +9,17 @@ SKIP :
 }
 
 // Delimiters
-TOKEN : 
+TOKEN #Literal : 
 {
     <TRUE: "true">
     |
     <FALSE: "false">
     |
     <NULL: "null">
-    |
+}
+
+TOKEN #Delimiter :
+{
     <COLON : ":">
     |
     <COMMA : ",">
@@ -30,8 +33,7 @@ TOKEN :
     <CLOSE_BRACE : "}">
 }
 
-// String Literal
-TOKEN : 
+TOKEN #Literal : 
 {
   <#ESCAPE1 : "\\" (["\\", "\"", "/","b","f","n","r","t"])>
   |
@@ -43,9 +45,9 @@ TOKEN :
 }
 
 // Number Literal
-TOKEN: 
+TOKEN #Literal : 
 {
-	<#ZERO : "0">
+ <#ZERO : "0">
  |
  <#NON_ZERO : (["1"-"9"])(["0"-"9"])*>
  |
