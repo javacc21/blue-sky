@@ -3,7 +3,9 @@
  */
 options {
     PARSER_PACKAGE="jsonc";
+    PARSER_CLASS="JSONCParser";
     SPECIAL_TOKENS_ARE_NODES;
+    DEFAULT_LEXICAL_STATE="JSON";
 //  TREE_BUILDING_ENABLED=false;
 }
 

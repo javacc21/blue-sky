@@ -13,6 +13,7 @@
 options {
   PARSER_PACKAGE="json";
   NODE_PACKAGE="json.ast";
+  DEFAULT_LEXICAL_STATE="JSON";
 }
 
 SKIP :
@@ -37,13 +38,13 @@ TOKEN #Delimiter :
 }
 
 // Literals
-TOKEN #Literal : 
+TOKEN :
 {
-    <TRUE: "true">
+    <TRUE: "true"> #BooleanLiteral
     |
-    <FALSE: "false">
+    <FALSE: "false"> #BooleanLiteral
     |
-    <NULL: "null">
+    <NULL: "null"> #NullLiteral
     |
     <#ESCAPE1 : "\\" (["\\", "\"", "/","b","f","n","r","t"])>
     |
@@ -51,7 +52,7 @@ TOKEN #Literal :
     |
     <#REGULAR_CHAR : ~["\u0000"-"\u001F","\"","\\"]>
     |
-    <STRING_LITERAL : "\"" (<REGULAR_CHAR>|<ESCAPE2>|<ESCAPE1>)* "\"">
+    <STRING_LITERAL : "\"" (<REGULAR_CHAR>|<ESCAPE2>|<ESCAPE1>)* "\""> #StringLiteral
     |
     <#ZERO : "0">
     |
@@ -61,8 +62,75 @@ TOKEN #Literal :
     |
     <#EXPONENT : ["E","e"]["+","-"](["1"-"9"])+>
     |
-    <NUMBER : ("-")?(<ZERO>|<NON_ZERO>)(<FRACTION>)?(<EXPONENT>)?>
+    <NUMBER : ("-")?(<ZERO>|<NON_ZERO>)(<FRACTION>)?(<EXPONENT>)?> #NumberLiteral
 }
+
+INJECT(Node) : {}
+{
+  public default Object getValue() {
+    return null;
+  }
+}
+
+INJECT(StringLiteral) : {}
+{
+  private String value;
+  public Object getValue() {
+    if (value == null) return 1;
+    return 2;
+  }
+}
+
+INJECT(BooleanLiteral) : {}
+{
+  public Object getValue() {
+    return toString().equals("true") ? Boolean.TRUE : Boolean.FALSE;
+  }
+}
+
+INJECT(NumberLiteral) : {}
+{
+  public Object getValue() {
+    return new Double(toString());
+  }
+}
+
+
+
+/*
+INJECT(StringLiteral) : {}
+{
+  private String value;
+  public Object getValue() {
+    if (value == null) {
+      value = s.substring(image, image.length() -1);
+      if (value.indexOf('\\') >0) {
+        StringBuilder buf = new StringBuilder();
+        boolean escaped = false;
+        for (int i=0; i<value.length();i++) {
+            int c = value.charAt(i);
+            if (!escaped) {
+              buf.append(char) c);
+            }
+            else {
+              escaped = false;
+              switch (c) : {
+                 case 'b' : buf.append((char) '\b'); break;
+                 case 'f' : buf.append((char) '\f'); break;
+                 case 'n' : buf.append((char) '\n'); break;
+                 case 'r' : buf.append((char) '\r'); break;
+                 case 't' : buf.append((char) '\t'); break;
+                 default : buf.append((char) c);
+              }
+            }
+            this.value=buf.toString();
+        }
+      }
+      return value;
+    }
+  }
+}
+*/
 
 
 void Array() : {}
