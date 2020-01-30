@@ -1,0 +1,209 @@
+options {
+   DEFAULT_LEXICAL_STATE="BLOCK";
+   SPECIAL_TOKENS_ARE_NODES;
+   PARSER_PACKAGE="yaml";
+   NODE_PACKAGE="yaml.ast";
+}
+
+<BLOCK, FLOW> SPECIAL_TOKEN : 
+{
+   <COMMENT : "#" (~["\r","\n"])*>
+}
+
+<FLOW> SKIP :
+{
+   <IGNORE: (["\n", "\r", " "])+>
+}
+
+<BLOCK> TOKEN :
+{
+   <WHITESPACE : (["\n", "\r", " "])+> 
+   |
+   <DASH : "- ">
+   |
+   <TRIPLE_DASH : "---" ([" "])*>
+}
+
+<BLOCK, FLOW> TOKEN :
+{
+   <OPEN_BRACE : "{"> 
+   |
+   <OPEN_BRACKET : "[">
+   |
+   <COLON : ": ">
+}
+
+<BLOCK, FLOW> TOKEN: 
+{
+    <#ZERO : "0">
+    |
+    <#NON_ZERO : (["1"-"9"])(["0"-"9"])*>
+    |
+    <#FRACTION : "." (["0"-"9"])+>
+    |
+    <#EXPONENT : ["E","e"]["+","-"](["1"-"9"])+>
+    |
+    <NUMBER : ("-")?(<ZERO>|<NON_ZERO>)(<FRACTION>)?(<EXPONENT>)?> #NumberLiteral
+}
+
+<FLOW> TOKEN :
+{
+   <CLOSE_BRACE : "}">
+   |
+   <CLOSE_BRACKET : "]">
+   |
+   <COMMA : ",">
+}
+
+
+// A phony lexical state in which to define 
+// The indent/outdent tokens
+<PHONY> TOKEN :
+{
+   <INDENT : "indent"> #Indent
+   |
+   <OUTDENT : "outdent"> #Outdent
+   |
+   <NEWLINE : "newline"> #Newline
+}
+
+INJECT(LEXER_CLASS) : 
+{
+   import java.util.*;
+   import yaml.Nodes;
+}
+{
+   private int braceNesting, bracketNesting, indentation;
+   private List<Integer> indentationStack = new ArrayList<>();
+
+   Token tokenHook(Token t) {
+      switch (t.kind) {
+         case OPEN_BRACKET : 
+             if (bracketNesting == 0) SwitchTo(FLOW);
+             bracketNesting++;
+             break;
+         case CLOSE_BRACKET :
+             bracketNesting--;
+             if (braceNesting == 0 && bracketNesting==0) SwitchTo(BLOCK); 
+             break;
+         case OPEN_BRACE: 
+             if (braceNesting == 0) SwitchTo(FLOW); 
+             braceNesting++; 
+             break;
+         case CLOSE_BRACE: 
+             braceNesting--; 
+             if (braceNesting == 0 && bracketNesting==0) SwitchTo(BLOCK); 
+             break;
+         case WHITESPACE :
+             t=handleWhitespace(t);
+             break;
+      }
+      return t;
+   }
+
+   private Token handleWhitespace(Token t) {
+      int numSpaces = countSpacesAtEnd(t.image);
+      if (t.endColumn > numSpaces && numSpaces >0 && t.beginLine == t.endLine) {
+         // This isn't opening indent/dedent whitespace so we 
+         // don't do anything.
+         return t;
+      }
+      Token result = t;
+      String spaces = spaces(numSpaces);
+      if (numSpaces > indentation) {
+         indentationStack.add(indentation);
+         indentation += numSpaces;
+         result = Token.newToken(INDENT, spaces);
+      }
+      else if (numSpaces < indentation) {
+         int prevIndent = indentationStack.remove(indentationStack.size()-1);
+         if (prevIndent != numSpaces) {
+            throw new RuntimeException("Indentation problem!");
+         }
+         result = Token.newToken(OUTDENT, spaces);
+      }
+      else {
+         result = Token.newToken(NEWLINE, spaces);
+      }
+      Nodes.copyLocationInfo(t, result);
+      return result;
+   }
+
+   private String spaces(int num) {
+      StringBuilder buf = new StringBuilder(num);
+      for (int i=0;i<num;i++) buf.append((char) ' ');
+      return buf.toString();
+   }
+
+   private int countSpacesAtEnd(String s) {
+      int result =0;
+      for (int i = s.length() -1; i>=0; i--) {
+         if (s.charAt(i) == ' ') {
+            result++;
+         } 
+         else break;
+      }
+      return result;
+   }
+}
+
+void Scalar() : 
+{}
+{
+   <NUMBER>
+}
+
+void BlockSequence() : {}
+{
+   <DASH>Scalar()
+   (
+      LOOKAHEAD(2)
+      <NEWLINE><DASH>Scalar()
+   )*
+}
+
+void FlowSequence() : {}
+{
+   <OPEN_BRACKET>
+   [
+      Scalar()
+      (<COMMA>Scalar())*
+   ]
+   <CLOSE_BRACKET> 
+}
+
+void FlowHash() : {}
+{
+    <OPEN_BRACE>
+    [
+       Scalar()<COLON>YAMLObject()
+       (<COMMA>Scalar()<COLON>YAMLObject())*
+    ]
+    <CLOSE_BRACE>
+}
+
+void Sequence() : {}
+{
+   BlockSequence()
+   |
+   FlowSequence()
+}
+
+void YAMLObject() : {}
+{
+   Scalar()
+   |
+   Sequence()
+}
+
+void Root() : {}
+{
+   [<TRIPLE_DASH><NEWLINE>]
+   (
+     Sequence()
+     |
+     FlowHash()
+   )
+   [<NEWLINE>|<WHITESPACE>]
+   <EOF>
+}
