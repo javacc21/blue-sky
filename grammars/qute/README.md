@@ -18,7 +18,7 @@ be much more complex than this!
 <pre>
     void Expression() {}
     {
-        <C_IDENTIFIER>
+        &lt;C_IDENTIFIER&gt;
     }
 </pre>
 
