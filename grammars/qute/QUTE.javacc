@@ -18,9 +18,9 @@ TOKEN :
    |
    <IF : "{#if" <WS>> : QUTE_EXPRESSION
    |
-   <ENDIF : "{/if}"> : QUTE_TEXT
+   <ENDIF : "{/if}">  
    |
-   <ABBREVIATED_END : "{/}"> : QUTE_TEXT
+   <ABBREVIATED_END : "{/}">  
    |
    <ELSEIF : "{#else if" <WS>> : QUTE_EXPRESSION
    |
