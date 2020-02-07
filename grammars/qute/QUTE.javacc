@@ -1,0 +1,70 @@
+options {
+   DEFAULT_LEXICAL_STATE=QUTE_TEXT;
+   SPECIAL_TOKENS_ARE_NODES;
+   PARSER_PACKAGE="qute";
+}
+
+TOKEN : 
+{
+   <#NO_OPEN_CURLY: ~["{"]>
+   |
+   <#ESCAPED_OPEN_CURLY: "\\{">
+   |
+   <TEXT : (<NO_OPEN_CURLY>|<ESCAPED_OPEN_CURLY>)+> #Text
+   |
+   <OPEN_CURLY : "{"> : QUTE_EXPRESSION
+}
+
+MORE :
+{
+   <OPEN_COMMENT : "{!"> : IN_COMMENT
+}
+
+<IN_COMMENT> MORE :
+{
+   <~[]>
+}
+
+<IN_COMMENT> SPECIAL_TOKEN : 
+{
+   <CLOSE_COMMENT: "!}"> #Comment : QUTE_TEXT
+}
+
+<QUTE_EXPRESSION> SKIP :
+{
+   <(" "| "\t"| "\n"| "\r")+> 
+}
+
+<QUTE_EXPRESSION> TOKEN :
+{
+   <#ASCII_LETTER_UNDERSCORE : ["_", "a"-"z", "A"-"Z"]>
+   |
+   <#ASCII_DIGIT : ["0"-"9"]>
+   |
+   <C_IDENTIFIER : <ASCII_LETTER_UNDERSCORE>(<ASCII_LETTER_UNDERSCORE>|<ASCII_DIGIT>)*>
+   |
+   <CLOSE_CURLY : "}"> : QUTE_TEXT
+}
+
+void Expression() : {}
+{
+   <C_IDENTIFIER>
+}
+
+void Interpolation() : {}
+{
+   <OPEN_CURLY>Expression()<CLOSE_CURLY>
+}
+
+Block Block() #Block : {}
+{
+   (
+      <TEXT>
+      |
+      Interpolation()
+   )+
+   {
+      return CURRENT_NODE;
+   }
+}
+
