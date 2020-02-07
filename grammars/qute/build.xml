@@ -1,0 +1,50 @@
+<project name="QUTEParser" default="compile" basedir=".">
+   <property name = "BIN_DIR" value="../../bin"/>
+   <uptodate property="parser.uptodate"
+            srcfile="QUTE.javacc"
+            targetfile="qute/QUTEParser.java"/> 
+   <target name="clean">
+       <delete>
+          <fileset dir="." includes="*.class"/>
+       </delete>
+       <delete dir="qute"/>
+   </target>
+   <target name="parser-gen" unless="parser.uptodate">
+        <mkdir dir="../../bin"/>
+        <get 
+            src="https://javacc.com/download/javacc.jar" 
+            dest="${BIN_DIR}"
+            quiet="true"
+            ignoreerrors="true"
+            usetimestamp="true" />
+        <get
+            src="https://javacc.com/download/freemarker.jar"
+            dest="${BIN_DIR}"
+            quiet="true"
+            ignoreerrors="true"
+            usetimestamp="true" />
+        <java jar="${BIN_DIR}/javacc.jar" fork="true">
+            <arg value="QUTE.javacc"/>
+        </java>
+   </target>
+   <target name="compile" depends="parser-gen">
+       <javac srcdir="." includeantruntime="off"/>
+       <echo>
+           test harness via: java QUTETest &lt;filename&gt;
+       </echo>
+   </target>
+   <target name="test" depends="compile">
+      <echo>Let's parse a file and output the AST.</echo>
+      <java classname="QUTETest" classpath=".">
+          <arg value="./testfiles/test1.qute"/>
+      </java>
+      <echo>And another one.</echo>
+      <java classname="QUTETest" classpath=".">
+          <arg value="./testfiles/test2.qute"/>
+      </java>
+      <echo>And one more.</echo>
+      <java classname="QUTETest" classpath=".">
+          <arg value="./testfiles/test3.qute"/>
+      </java>
+   </target>
+</project>

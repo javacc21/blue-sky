@@ -4,5 +4,5 @@ blah blah blah
    
    {Foobar}
    
-more blah blah
+This is just text: \{blahblah} but this is not: {blahblah}.
 

@@ -1,0 +1,15 @@
+blah blah blah
+   {#if ThereIsAWill}Then there is a way!{/if}
+
+   {! This is a comment !}
+
+  {#if foo}
+     foo
+  {#else if bar}
+     {baz}
+  {#else}
+     And now for something completely different!
+  {/}
+   
+more blah blah
+

@@ -1,0 +1,10 @@
+{#if YouSaySo}
+    我很满意了！
+    {#ContentHere }
+       Moi j'avance et tu recules. 
+       Comment veux tu que je t'encules?
+    {/}
+{#else }
+    Я Русскый человек!
+    {#EmptySection /}    
+{/if}
