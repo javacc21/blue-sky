@@ -56,15 +56,19 @@ void Interpolation() : {}
    <OPEN_CURLY>Expression()<CLOSE_CURLY>
 }
 
-Block Block() #Block : {}
+void Block() : {}
 {
    (
       <TEXT>
       |
       Interpolation()
    )+
-   {
-      return CURRENT_NODE;
-   }
+}
+
+
+void Root() :{}
+{
+   Block()
+   <EOF>
 }
 
