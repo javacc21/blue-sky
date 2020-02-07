@@ -10,10 +10,26 @@ TOKEN :
    |
    <#ESCAPED_OPEN_CURLY: "\\{">
    |
+   <#WS: ([" ", "\n", "\r", "\t"])+>
+   |
    <TEXT : (<NO_OPEN_CURLY>|<ESCAPED_OPEN_CURLY>)+> #Text
    |
    <OPEN_CURLY : "{"> : QUTE_EXPRESSION
-}
+   |
+   <IF : "{#if" <WS>> : QUTE_EXPRESSION
+   |
+   <ENDIF : "{/if}"> : QUTE_TEXT
+   |
+   <ABBREVIATED_END : "{/}"> : QUTE_TEXT
+   |
+   <ELSEIF : "{#else if" <WS>> : QUTE_EXPRESSION
+   |
+   <ELSE : "{#else" (<WS>)? "}">
+   |
+   <START_SECTION : "{#" (<ASCII_LETTER>)+> : QUTE_EXPRESSION
+   |
+   <END_SECTION : "{/" (<ASCII_LETTER>)+ (<WS>)? "}">
+ }
 
 MORE :
 {
@@ -37,13 +53,15 @@ MORE :
 
 <QUTE_EXPRESSION> TOKEN :
 {
-   <#ASCII_LETTER_UNDERSCORE : ["_", "a"-"z", "A"-"Z"]>
+   <#ASCII_LETTER : ["a"-"z", "A"-"Z"]>
    |
    <#ASCII_DIGIT : ["0"-"9"]>
    |
-   <C_IDENTIFIER : <ASCII_LETTER_UNDERSCORE>(<ASCII_LETTER_UNDERSCORE>|<ASCII_DIGIT>)*>
+   <C_IDENTIFIER : ("_"|<ASCII_LETTER>)("_"|<ASCII_LETTER>|<ASCII_DIGIT>)*>
    |
    <CLOSE_CURLY : "}"> : QUTE_TEXT
+   |
+   <CLOSE_EMPTY : "/}"> : QUTE_TEXT
 }
 
 void Expression() : {}
@@ -56,12 +74,57 @@ void Interpolation() : {}
    <OPEN_CURLY>Expression()<CLOSE_CURLY>
 }
 
+void IfBlock() : {}
+{
+   <IF>
+   Expression()
+   <CLOSE_CURLY>
+   Block()
+   (ElseIfBlock())*
+   [ElseBlock()]
+   (<ENDIF>|<ABBREVIATED_END>)
+}
+
+void ElseIfBlock() : {}
+{
+   <ELSEIF>
+   Expression()
+   <CLOSE_CURLY>
+   Block()
+}
+
+void ElseBlock() : {}
+{
+   <ELSE> 
+   Block()
+}
+
+void Section() : {}
+{
+   <START_SECTION>[Expression()]
+   (
+       <CLOSE_EMPTY>
+       |
+       (
+          <CLOSE_CURLY>
+          Block()
+          // This does not check for a mismatch between the start and end tag.
+          (<END_SECTION>|<ABBREVIATED_END>)
+       )
+   )
+}
+
+
 void Block() : {}
 {
    (
       <TEXT>
       |
       Interpolation()
+      |
+      IfBlock()
+      |
+      Section()
    )+
 }
 
