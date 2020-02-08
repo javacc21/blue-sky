@@ -1,0 +1,65 @@
+options {
+    DEFAULT_LEXICAL_STATE=QUTE_EXPRESSION;
+}
+
+<QUTE_EXPRESSION> SKIP :
+{
+   <(" "| "\t"| "\n"| "\r")+> 
+}
+
+
+<QUTE_EXPRESSION> TOKEN :
+{
+   <#ASCII_LETTER : ["a"-"z", "A"-"Z"]>
+   |
+   <#ASCII_DIGIT : ["0"-"9"]>
+   |
+   <C_IDENTIFIER : ("_"|<ASCII_LETTER>)("_"|<ASCII_LETTER>|<ASCII_DIGIT>)*>
+}
+
+// These are the the string and numerical literals from the JSON spec
+TOKEN #Literal : 
+{
+    <#ESCAPE1 : "\\" (["\\", "\"", "/","b","f","n","r","t"])>
+    |
+    <#ESCAPE2 : "\\u" (["0"-"9", "a"-"f", "A"-"F"]) {4}>
+    |
+    <#REGULAR_CHAR : ~["\u0000"-"\u001F","\"","\\"]>
+    |
+    <STRING_LITERAL : "\"" (<REGULAR_CHAR>|<ESCAPE2>|<ESCAPE1>)* "\""> #StringLiteral
+    |
+    <#ZERO : "0">
+    |
+    <#NON_ZERO : (["1"-"9"])(["0"-"9"])*>
+    |
+    <#FRACTION : "." (["0"-"9"])+>
+    |
+    <#EXPONENT : ["E","e"]["+","-"](["1"-"9"])+>
+    |
+    <NUMBER : ("-")?(<ZERO>|<NON_ZERO>)(<FRACTION>)?(<EXPONENT>)?> #NumberLiteral
+}
+
+TOKEN #Delimiter :
+{
+   <OPEN_PAREN : "(">
+   |
+   <CLOSE_PAREN : ")">
+}
+
+void Expression() : {}
+{
+   <C_IDENTIFIER>
+   |
+   <STRING_LITERAL>
+   |
+   <NUMBER>   
+   |
+   Parenthesis()
+}
+
+void Parenthesis() : {}
+{
+   <OPEN_PAREN>
+   Expression()
+   <CLOSE_PAREN>
+}

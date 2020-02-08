@@ -4,6 +4,8 @@ options {
    PARSER_PACKAGE="qute";
 }
 
+INCLUDE("QEL.javacc")
+
 TOKEN : 
 {
    <#NO_OPEN_CURLY: ~["{"]>
@@ -22,7 +24,7 @@ TOKEN :
    |
    <ABBREVIATED_END : "{/}"> : QUTE_TEXT
    |
-   <ELSEIF : "{#else if" <WS>> : QUTE_EXPRESSION
+   <ELSEIF : "{#else"<WS>"if" <WS>> : QUTE_EXPRESSION
    |
    <ELSE : "{#else" (<WS>)? "}">
    |
@@ -46,27 +48,12 @@ MORE :
    <CLOSE_COMMENT: "!}"> #Comment : QUTE_TEXT
 }
 
-<QUTE_EXPRESSION> SKIP :
-{
-   <(" "| "\t"| "\n"| "\r")+> 
-}
 
 <QUTE_EXPRESSION> TOKEN :
 {
-   <#ASCII_LETTER : ["a"-"z", "A"-"Z"]>
-   |
-   <#ASCII_DIGIT : ["0"-"9"]>
-   |
-   <C_IDENTIFIER : ("_"|<ASCII_LETTER>)("_"|<ASCII_LETTER>|<ASCII_DIGIT>)*>
-   |
    <CLOSE_CURLY : "}"> : QUTE_TEXT
    |
    <CLOSE_EMPTY : "/}"> : QUTE_TEXT
-}
-
-void Expression() : {}
-{
-   <C_IDENTIFIER>
 }
 
 void Interpolation() : {}
@@ -134,4 +121,3 @@ void Root() :{}
    Block()
    <EOF>
 }
-
