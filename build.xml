@@ -9,5 +9,10 @@
         or if your JSON files have comments in them:
       java -cp ./grammars/json JSONCTest &lt;filenames&gt;
     </echo>
+    <ant antfile="build.xml" dir="grammars/qute" target="compile"/>
+    <echo>
+      You should be able to test the QUTE Grammar via:
+      java -cp ./grammars/qute QUTETest &lt;filenames&gt;
+    </echo>
   </target>
 </project>
