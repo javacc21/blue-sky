@@ -46,5 +46,8 @@
       <java classname="QUTETest" classpath=".">
           <arg value="./testfiles/test3.qute"/>
       </java>
+      <java classname="QUTETest" classpath=".">
+          <arg value="./testfiles/test4.qute"/>
+      </java>
    </target>
 </project>
