@@ -131,7 +131,7 @@ void Block() : {}
 
 void Root() :{}
 {
-   Block()
+   [Block()]
    <EOF>
 }
 
