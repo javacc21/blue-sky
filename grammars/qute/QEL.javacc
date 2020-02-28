@@ -1,12 +1,12 @@
 options {
     DEFAULT_LEXICAL_STATE=QUTE_EXPRESSION;
+    FAULT_TOLERANT=true;
 }
 
 <QUTE_EXPRESSION> SKIP :
 {
    <(" "| "\t"| "\n"| "\r")+> 
 }
-
 
 <QUTE_EXPRESSION> TOKEN :
 {
@@ -61,5 +61,5 @@ void Parenthesis() : {}
 {
    <OPEN_PAREN>
    Expression()
-   <CLOSE_PAREN>
+   <CLOSE_PAREN>!
 }

@@ -12,7 +12,7 @@
    <target name="parser-gen" unless="parser.uptodate">
         <mkdir dir="../../bin"/>
         <get 
-            src="https://javacc.com/download/javacc.jar" 
+            src="https://javacc.com/download/experimental/javacc.jar" 
             dest="${BIN_DIR}"
             quiet="true"
             ignoreerrors="true"
@@ -23,30 +23,30 @@
             quiet="true"
             ignoreerrors="true"
             usetimestamp="true" />
-        <java jar="${BIN_DIR}/javacc.jar" fork="true">
+        <java jar="${BIN_DIR}/javacc.jar" fork="true" failonerror="true" >
             <arg value="QUTE.javacc"/>
         </java>
    </target>
    <target name="compile" depends="parser-gen">
-       <javac srcdir="." includeantruntime="off"/>
+       <javac srcdir="." includeantruntime="off" failonerror="true" />
        <echo>
            test harness via: java QUTETest &lt;filename&gt;
        </echo>
    </target>
    <target name="test" depends="compile">
       <echo>Let's parse a file and output the AST.</echo>
-      <java classname="QUTETest" classpath=".">
+      <java classname="QUTETest" classpath="." failonerror="true" >
           <arg value="./testfiles/test1.qute"/>
       </java>
       <echo>And another one.</echo>
-      <java classname="QUTETest" classpath=".">
+      <java classname="QUTETest" classpath="." failonerror="true">
           <arg value="./testfiles/test2.qute"/>
       </java>
       <echo>And one more.</echo>
-      <java classname="QUTETest" classpath=".">
+      <java classname="QUTETest" classpath="." failonerror="true">
           <arg value="./testfiles/test3.qute"/>
       </java>
-      <java classname="QUTETest" classpath=".">
+      <java classname="QUTETest" classpath="." failonerror="true">
           <arg value="./testfiles/test4.qute"/>
       </java>
    </target>

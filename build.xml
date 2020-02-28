@@ -1,5 +1,5 @@
-<project name="stuff" default="json">
-  <target name="json">
+<project name="stuff" default="all">
+  <target name="all">
     <echo>Building JSON grammar in grammars/json directory.</echo>
     <ant antfile="build.xml" dir="grammars/json" target="clean"/>
     <ant antfile="build.xml" dir="grammars/json" target="compile"/>

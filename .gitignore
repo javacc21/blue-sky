@@ -1,2 +1,5 @@
 *.class
+*.html
 bin/*
+grammars/qute/qute
+
