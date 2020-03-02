@@ -3,6 +3,13 @@ options {
     FAULT_TOLERANT=true;
 }
 
+TOKEN :
+{
+   <IN : "in">
+   |
+   <AS : "as">
+}
+
 <QUTE_EXPRESSION> SKIP :
 {
    <(" "| "\t"| "\n"| "\r")+> 
