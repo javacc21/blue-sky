@@ -1,3 +1,6 @@
+/* 
+ * See Qute specification at https://quarkus.io/guides/qute-reference
+*/
 options {
    DEFAULT_LEXICAL_STATE=QUTE_TEXT;
    SPECIAL_TOKENS_ARE_NODES;
@@ -19,15 +22,35 @@ TOKEN :
    |
    <OPEN_CURLY : "{"> : QUTE_EXPRESSION
    |
+   <ABBREVIATED_END : "{/}">
+   |
+   <EACH : "{#each" <WS>> : QUTE_EXPRESSION
+   |
+   <ENDEACH : ("{/each}" | <ABBREVIATED_END>)+ >
+   |
+   <FOR : "{#for" <WS>> : QUTE_EXPRESSION
+   |
+   <ENDFOR : ("{/for}" | <ABBREVIATED_END>)+ >
+   |
    <IF : "{#if" <WS>> : QUTE_EXPRESSION
-   |
-   <ENDIF : "{/if}">  
-   |
-   <ABBREVIATED_END : "{/}">  
    |
    <ELSEIF : "{#else"<WS>"if" <WS>> : QUTE_EXPRESSION
    |
    <ELSE : "{#else" (<WS>)? "}">
+   |
+   <ENDIF : ("{/if}" | <ABBREVIATED_END>)+ >
+   |
+   <QUTE_INCLUDE : "{#include" <WS>> : QUTE_EXPRESSION
+   |
+   <ENDINCLUDE :  ("{/include}" | <ABBREVIATED_END>)+ >
+   |
+   <INSERT : "{#insert" <WS>> : QUTE_EXPRESSION
+   |
+   <ENDINSERT :  ("{/insert}" | <ABBREVIATED_END>)+ >
+   |
+   <WITH : "{#with" <WS>> : QUTE_EXPRESSION
+   |
+   <ENDWITH :  ("{/with}" | <ABBREVIATED_END>)+ >     
    |
    <START_SECTION : "{#" (<ASCII_LETTER>)+> : QUTE_EXPRESSION
    |
@@ -62,18 +85,38 @@ void Interpolation() : {}
    <OPEN_CURLY>Expression()<CLOSE_CURLY>
 }
 
-void IfBlock() : {}
+void EachSection() : {}
+{
+   <EACH>
+   Expression()
+   <CLOSE_CURLY>
+   Block()
+   <ENDEACH>
+}
+
+void ForSection() : {}
+{
+   <FOR>
+   <C_IDENTIFIER>
+   <IN>
+   Expression()
+   <CLOSE_CURLY>
+   [Block()]
+   <ENDFOR>
+}
+
+void IfSection() : {}
 {
    <IF>
    Expression()
    <CLOSE_CURLY>
    Block()
-   (ElseIfBlock())*
+   (ElseIfSection())*
    [ElseBlock()]
-   (<ENDIF>|<ABBREVIATED_END>)
+   <ENDIF>
 }
 
-void ElseIfBlock() : {}
+void ElseIfSection() : {}
 {
    <ELSEIF>
    Expression()
@@ -87,7 +130,34 @@ void ElseBlock() : {}
    Block()
 }
 
-void Section() : {}
+void IncludeSection() : {}
+{
+   <QUTE_INCLUDE>
+   Expression()
+   <CLOSE_CURLY>
+   Block()
+   <ENDINCLUDE>
+}
+
+void InsertSection() : {}
+{
+   <INSERT>
+   Expression()
+   <CLOSE_CURLY>
+   Block()
+   <ENDINSERT>
+}
+
+void WithSection() : {}
+{
+   <WITH>
+   Expression()
+   <CLOSE_CURLY>
+   Block()
+   <ENDWITH>
+}
+
+void UserSection() : {}
 {
    <START_SECTION>[Expression()]
    (
@@ -110,9 +180,19 @@ void Block() : {}
       |
       Interpolation()
       |
-      IfBlock()
+      EachSection()
       |
-      Section()
+      ForSection()
+      |
+      IfSection()
+      |
+      IncludeSection()
+      |
+      InsertSection()
+      |
+      WithSection()
+      |
+      UserSection()
    )+
 }
 
