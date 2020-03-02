@@ -1,7 +1,7 @@
 Just plain text: \{#FalseAlarm}
-{#if (condition)}
+{#if (condition}
    {"你喜欢吗"}
-   {#if ((("Тебе нравиться"))) }
+   {#if ((("Тебе нравиться") }
        Oui, j'aime bien.
    {/if}
    {#else}
