@@ -26,11 +26,11 @@ TOKEN :
    |
    <EACH : "{#each" <WS>> : QUTE_EXPRESSION
    |
-   <ENDEACH : ("{/each}" | <ABBREVIATED_END>)+ >
+   <ENDEACH : "{/each}" >
    |
    <FOR : "{#for" <WS>> : QUTE_EXPRESSION
    |
-   <ENDFOR : ("{/for}" | <ABBREVIATED_END>)+ >
+   <ENDFOR : "{/for}" >
    |
    <IF : "{#if" <WS>> : QUTE_EXPRESSION
    |
@@ -38,19 +38,19 @@ TOKEN :
    |
    <ELSE : "{#else" (<WS>)? "}">
    |
-   <ENDIF : ("{/if}" | <ABBREVIATED_END>)+ >
+   <ENDIF : "{/if}" > 
    |
    <QUTE_INCLUDE : "{#include" <WS>> : QUTE_EXPRESSION
    |
-   <ENDINCLUDE :  ("{/include}" | <ABBREVIATED_END>)+ >
+   <ENDINCLUDE :  "{/include}" >
    |
    <INSERT : "{#insert" <WS>> : QUTE_EXPRESSION
    |
-   <ENDINSERT :  ("{/insert}" | <ABBREVIATED_END>)+ >
+   <ENDINSERT :  "{/insert}" >
    |
    <WITH : "{#with" <WS>> : QUTE_EXPRESSION
    |
-   <ENDWITH :  ("{/with}" | <ABBREVIATED_END>)+ >     
+   <ENDWITH :  "{/with}" >     
    |
    <START_SECTION : "{#" (<ASCII_LETTER>)+> : QUTE_EXPRESSION
    |
@@ -91,7 +91,7 @@ void EachSection() : {}
    Expression()
    <CLOSE_CURLY>
    Block()
-   <ENDEACH>
+   (<ABBREVIATED_END>|<ENDEACH>)
 }
 
 void ForSection() : {}
@@ -102,7 +102,7 @@ void ForSection() : {}
    Expression()
    <CLOSE_CURLY>
    [Block()]
-   <ENDFOR>
+   (<ABBREVIATED_END>|<ENDFOR>)
 }
 
 void IfSection() : {}
@@ -113,7 +113,7 @@ void IfSection() : {}
    Block()
    (ElseIfSection())*
    [ElseBlock()]
-   <ENDIF>
+   (<ABBREVIATED_END>|<ENDIF>)
 }
 
 void ElseIfSection() : {}
@@ -136,7 +136,7 @@ void IncludeSection() : {}
    Expression()
    <CLOSE_CURLY>
    Block()
-   <ENDINCLUDE>
+   (<ABBREVIATED_END>|<ENDINCLUDE>)
 }
 
 void InsertSection() : {}
@@ -145,7 +145,7 @@ void InsertSection() : {}
    Expression()
    <CLOSE_CURLY>
    Block()
-   <ENDINSERT>
+   (<ABBREVIATED_END>|<ENDINSERT>)
 }
 
 void WithSection() : {}
@@ -154,7 +154,7 @@ void WithSection() : {}
    Expression()
    <CLOSE_CURLY>
    Block()
-   <ENDWITH>
+   (<ABBREVIATED_END>|<ENDWITH>)
 }
 
 void UserSection() : {}
