@@ -5,9 +5,83 @@ options {
 
 TOKEN :
 {
+   <COMMA : ",">
+   |
    <IN : "in">
    |
    <AS : "as">
+   |
+   <OR : "||">
+   |
+   <OR2 : "or">
+   |
+   <AND : "&&">
+   |
+   <AND2 : "and">
+   |
+   <SIMPLE_EQUALS : "=">
+   |
+   <EQUALS : "==">
+   |
+   <EQUALS2 : "eq">
+   |
+   <EQUALS3 : "is">
+   |
+   <GT : ">">
+   |
+   <ALT_GT : "gt">
+   |
+   <GE : ">=">
+   |
+   <ALT_GE : "ge">
+   |
+   <LT : "<">
+   |
+   <ALT_LT : "lt">
+   |
+   <LE : "<=">
+   |
+   <ALT_LE : "le">
+   |
+   <DOT_DOT : "..">
+   |
+   <PLUS : "+">
+   |
+   <MINUS : "-">
+   |
+   <TIMES : "*">
+   |
+   <DIVIDE : "/">
+   |
+   <DOT : ".">   
+   |
+   <EXCLAM : "!">
+   |
+   <OPEN_BRACKET : "[">
+   |
+   <CLOSE_BRACKET : "]">
+   |
+   <NULL : "null">
+   |
+   <TRUE : "true">
+   |
+   <FALSE : "false">   
+   |
+   <INTEGER : (["0"-"9"])+>
+   |
+   <DECIMAL : <INTEGER> "." <INTEGER>>
+   |
+   <STRING_LITERAL :
+      ("\""
+          ((~["\\", "\""]) | ("\\" ~[]))*
+      "\"")
+      |
+      ("'"
+          ((~["\\", "'"]) | ("\\" ~[]))*
+      "'")
+   >
+   |
+   <RAW_STRING : "r" (("\"" (~["\""])* "\"") | ("'" (~["'"])* "'"))>   
 }
 
 <QUTE_EXPRESSION> SKIP :
@@ -43,7 +117,7 @@ TOKEN #Literal :
     |
     <#EXPONENT : ["E","e"]["+","-"](["1"-"9"])+>
     |
-    <NUMBER : ("-")?(<ZERO>|<NON_ZERO>)(<FRACTION>)?(<EXPONENT>)?> #NumberLiteral
+    <NUMBER : ("-")?(<ZERO>|<NON_ZERO>)(<FRACTION>)?(<EXPONENT>)?> #NumberLiteral2
 }
 
 TOKEN #Delimiter :
@@ -55,13 +129,173 @@ TOKEN #Delimiter :
 
 void Expression() : {}
 {
-   <C_IDENTIFIER>
-   |
-   <STRING_LITERAL>
-   |
-   <NUMBER>   
-   |
-   Parenthesis()
+    OrExpression()
+}
+
+void OrExpression() : {}
+{
+    AndExpression()
+    (
+        (<OR>|<OR2>) AndExpression()
+    )*
+}
+
+void AndExpression() : {}
+{
+    EqualityExpression()
+    (
+        (<AND>|<AND2>) EqualityExpression()
+    )*
+}
+
+void EqualityExpression() : {}
+{
+    RelationalExpression()
+    [
+        (<EQUALS>|<EQUALS2>|<EQUALS3>)
+        RelationalExpression()
+    ]
+}
+
+void RelationalExpression() : {}
+{
+    RangeExpression()
+    [
+        (<GT>|<GE>|<LT>|<LE>|<ALT_GT>|<ALT_GE>|<ALT_LE>|<ALT_LT>)
+        RangeExpression()
+    ]
+}
+
+void RangeExpression() : {}
+{
+    AdditiveExpression()
+    [
+       <DOT_DOT>
+       [
+         LOOKAHEAD(AdditiveExpression())
+          AdditiveExpression()
+       ]
+    ]
+}
+
+void AdditiveExpression() : {}
+{
+    MultiplicativeExpression()
+    (
+        LOOKAHEAD(<PLUS>|<MINUS>)
+           (<PLUS>|<MINUS>)
+           MultiplicativeExpression()
+    )*
+}
+
+void MultiplicativeExpression() : {}
+{
+    UnaryExpression()
+    (
+          (<TIMES>|<DIVIDE>)
+          UnaryExpression()
+    )*
+}
+
+void UnaryExpression() #void : {}
+{
+    UnaryPlusMinusExpression()
+    |
+    NotExpression()
+    |
+    DefaultToExpression()
+}
+
+void UnaryPlusMinusExpression() : {}
+{
+    (<PLUS>|<MINUS>) DefaultToExpression()
+}
+
+void NotExpression() : {}
+{
+    <EXCLAM>
+    DefaultToExpression()
+}
+
+void DefaultToExpression() : {}
+{
+    PrimaryExpression()
+    (
+        LOOKAHEAD(<EXCLAM>BaseExpression(), {getToken(2).kind !=C_IDENTIFIER || getToken(3).kind != SIMPLE_EQUALS})
+        <EXCLAM>PrimaryExpression()
+    )*
+    [
+      LOOKAHEAD(1) //This seems to be necessary to prevent a warning, but it seems like maybe this is a bug.
+       <EXCLAM>
+    ]
+}
+
+void PrimaryExpression() : {}
+{
+  BaseExpression()
+  (
+    LOOKAHEAD(<DOT>|<OPEN_BRACKET>|<OPEN_PAREN>)
+    (
+      DotKey()
+      |
+      DynamicKey()
+      |
+      MethodInvoke()            
+    )
+  )*
+}
+
+void BaseExpression() : {}
+{
+    <C_IDENTIFIER>
+    |
+    NumberLiteral()    
+    |
+    StringLiteral()
+    |
+    BooleanLiteral()
+    |
+    NullLiteral()
+    |
+    Parenthesis()
+}
+
+
+void DotKey() #void : {}
+{
+    <DOT>
+    (<C_IDENTIFIER>|<TIMES>)
+}
+
+void DynamicKey() #void : {}
+{
+    <OPEN_BRACKET>Expression()<CLOSE_BRACKET>
+}
+
+void MethodInvoke() #void : {}
+{
+  <OPEN_PAREN>[ArgsList()]<CLOSE_PAREN>
+}
+
+void ArgsList() #void : {}
+{
+    (
+        PositionalArgsList()!
+    )
+}
+
+void PositionalArgsList() : {}
+{
+    Expression()
+    (
+       [<COMMA>]
+       Expression()
+    )*
+}
+
+void StringLiteral() : {}
+{
+    <STRING_LITERAL>|<RAW_STRING>
 }
 
 void Parenthesis() : {}
@@ -69,4 +303,19 @@ void Parenthesis() : {}
    <OPEN_PAREN>
    Expression()
    <CLOSE_PAREN>!
+}
+
+void NumberLiteral() : {}
+{
+    <INTEGER>|<DECIMAL>
+}
+
+void BooleanLiteral() : {}
+{
+    <TRUE>|<FALSE>
+}
+
+void NullLiteral() : {}
+{
+    <NULL>
 }

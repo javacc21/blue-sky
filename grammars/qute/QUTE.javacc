@@ -55,6 +55,8 @@ TOKEN :
    <START_SECTION : "{#" (<ASCII_LETTER>)+> : QUTE_EXPRESSION
    |
    <END_SECTION : "{/" (<ASCII_LETTER>)+ (<WS>)? "}">
+   |
+   <START_PARAMETER_DECL : "{@" <C_IDENTIFIER> (<DOT>|<C_IDENTIFIER>)+ > : QUTE_EXPRESSION
  }
 
 MORE :
@@ -78,6 +80,13 @@ MORE :
    <CLOSE_CURLY : "}"> : QUTE_TEXT
    |
    <CLOSE_EMPTY : "/}"> : QUTE_TEXT
+}
+
+void ParameterDeclaration() : {}
+{
+   <START_PARAMETER_DECL>
+   Expression()
+   <CLOSE_CURLY>   
 }
 
 void Interpolation() : {}
@@ -177,6 +186,8 @@ void Block() : {}
 {
    (
       <TEXT>
+      |
+      ParameterDeclaration()
       |
       Interpolation()
       |
