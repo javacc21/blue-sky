@@ -85,7 +85,7 @@ MORE :
 void ParameterDeclaration() : {}
 {
    <START_PARAMETER_DECL>
-   Expression()
+   <C_IDENTIFIER>
    <CLOSE_CURLY>   
 }
 
