@@ -1,0 +1,69 @@
+Root: {
+  location: (1,1,9,22)
+  IfSection: {
+    location: (1,1,10,5)
+    IF: {
+      location: (1,1,1,5)
+    }
+    C_IDENTIFIER: {
+      location: (1,6,1,13)
+    }
+    CLOSE_CURLY: {
+      location: (1,14,1,14)
+    }
+    Block: {
+      location: (1,15,6,8)
+      Text: {
+        location: (1,15,3,4)
+      }
+      UserSection: {
+        location: (3,5,6,7)
+        START_SECTION: {
+          location: (3,5,3,17)
+        }
+        CLOSE_CURLY: {
+          location: (3,19,3,19)
+        }
+        Text: {
+          location: (3,20,6,4)
+        }
+        ABBREVIATED_END: {
+          location: (6,5,6,7)
+        }
+      }
+      Text: {
+        location: (6,8,6,8)
+      }
+    }
+    ElseBlock: {
+      location: (7,1,9,26)
+      ELSE: {
+        location: (7,1,7,8)
+      }
+      Block: {
+        location: (7,9,9,26)
+        Text: {
+          location: (7,9,9,4)
+        }
+        UserSection: {
+          location: (9,5,9,21)
+          START_SECTION: {
+            location: (9,5,9,18)
+          }
+          CLOSE_EMPTY: {
+            location: (9,20,9,21)
+          }
+        }
+        Text: {
+          location: (9,22,9,26)
+        }
+      }
+    }
+    ENDIF: {
+      location: (10,1,10,5)
+    }
+  }
+  Token: {
+    location: (9,22,9,22)
+  }
+}

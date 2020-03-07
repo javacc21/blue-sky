@@ -1,0 +1,135 @@
+Root: {
+  location: (1,1,11,33)
+  Block: {
+    location: (1,1,11,33)
+    Text: {
+      location: (1,1,1,32)
+    }
+    IfSection: {
+      location: (2,1,9,5)
+      IF: {
+        location: (2,1,2,5)
+      }
+      Parenthesis: {
+        location: (2,6,2,16)
+        Delimiter: {
+          location: (2,6,2,6)
+        }
+        C_IDENTIFIER: {
+          location: (2,7,2,15)
+        }
+        Delimiter: {
+          location: (2,15,2,16)
+          virtual: true
+        }
+      }
+      CLOSE_CURLY: {
+        location: (2,16,2,16)
+      }
+      Block: {
+        location: (2,17,7,3)
+        Text: {
+          location: (2,17,3,3)
+        }
+        Interpolation: {
+          location: (3,4,3,11)
+          OPEN_CURLY: {
+            location: (3,4,3,4)
+          }
+          STRING_LITERAL: {
+            location: (3,5,3,10)
+          }
+          CLOSE_CURLY: {
+            location: (3,11,3,11)
+          }
+        }
+        Text: {
+          location: (3,12,4,3)
+        }
+        IfSection: {
+          location: (4,4,6,8)
+          IF: {
+            location: (4,4,4,8)
+          }
+          Parenthesis: {
+            location: (4,9,4,30)
+            Delimiter: {
+              location: (4,9,4,9)
+            }
+            Parenthesis: {
+              location: (4,10,4,30)
+              Delimiter: {
+                location: (4,10,4,10)
+              }
+              Parenthesis: {
+                location: (4,11,4,28)
+                Delimiter: {
+                  location: (4,11,4,11)
+                }
+                STRING_LITERAL: {
+                  location: (4,12,4,27)
+                }
+                Delimiter: {
+                  location: (4,28,4,28)
+                }
+              }
+              Delimiter: {
+                location: (4,28,4,30)
+                virtual: true
+              }
+            }
+            Delimiter: {
+              location: (4,30,4,30)
+              virtual: true
+            }
+          }
+          CLOSE_CURLY: {
+            location: (4,30,4,30)
+          }
+          Text: {
+            location: (4,31,6,3)
+          }
+          ENDIF: {
+            location: (6,4,6,8)
+          }
+        }
+        Text: {
+          location: (6,9,7,3)
+        }
+      }
+      ElseBlock: {
+        location: (7,4,8,50)
+        ELSE: {
+          location: (7,4,7,10)
+        }
+        Text: {
+          location: (7,11,8,50)
+        }
+      }
+      ENDIF: {
+        location: (9,1,9,5)
+      }
+    }
+    Text: {
+      location: (9,6,10,1)
+    }
+    UserSection: {
+      location: (11,1,11,32)
+      START_SECTION: {
+        location: (11,1,11,13)
+      }
+      STRING_LITERAL: {
+        location: (11,15,11,30)
+      }
+      CLOSE_EMPTY: {
+        location: (11,31,11,32)
+      }
+    }
+    Text: {
+      location: (11,33,11,33)
+    }
+  }
+  Token: {
+    location: (11,33,11,33)
+  }
+}

@@ -1,0 +1,48 @@
+Root: {
+  location: (1,1,7,59)
+  Block: {
+    location: (1,1,8,1)
+    Text: {
+      location: (1,1,3,3)
+    }
+    Comment: {
+      location: (3,4,3,26)
+    }
+    Text: {
+      location: (3,27,5,3)
+    }
+    Interpolation: {
+      location: (5,4,5,11)
+      OPEN_CURLY: {
+        location: (5,4,5,4)
+      }
+      C_IDENTIFIER: {
+        location: (5,5,5,10)
+      }
+      CLOSE_CURLY: {
+        location: (5,11,5,11)
+      }
+    }
+    Text: {
+      location: (5,12,7,48)
+    }
+    Interpolation: {
+      location: (7,49,7,58)
+      OPEN_CURLY: {
+        location: (7,49,7,49)
+      }
+      C_IDENTIFIER: {
+        location: (7,50,7,57)
+      }
+      CLOSE_CURLY: {
+        location: (7,58,7,58)
+      }
+    }
+    Text: {
+      location: (7,59,8,1)
+    }
+  }
+  Token: {
+    location: (7,59,7,59)
+  }
+}

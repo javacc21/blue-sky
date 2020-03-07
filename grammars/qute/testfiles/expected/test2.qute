@@ -1,0 +1,102 @@
+Root: {
+  location: (1,1,12,6)
+  Block: {
+    location: (1,1,15,1)
+    Text: {
+      location: (1,1,2,3)
+    }
+    IfSection: {
+      location: (2,4,2,46)
+      IF: {
+        location: (2,4,2,8)
+      }
+      C_IDENTIFIER: {
+        location: (2,9,2,20)
+      }
+      CLOSE_CURLY: {
+        location: (2,21,2,21)
+      }
+      Text: {
+        location: (2,22,2,41)
+      }
+      ENDIF: {
+        location: (2,42,2,46)
+      }
+    }
+    Text: {
+      location: (2,47,4,3)
+    }
+    Comment: {
+      location: (4,4,4,26)
+    }
+    Text: {
+      location: (4,27,6,2)
+    }
+    IfSection: {
+      location: (6,3,12,5)
+      IF: {
+        location: (6,3,6,7)
+      }
+      C_IDENTIFIER: {
+        location: (6,8,6,10)
+      }
+      CLOSE_CURLY: {
+        location: (6,11,6,11)
+      }
+      Text: {
+        location: (6,12,8,2)
+      }
+      ElseIfSection: {
+        location: (8,3,10,2)
+        ELSEIF: {
+          location: (8,3,8,12)
+        }
+        C_IDENTIFIER: {
+          location: (8,13,8,15)
+        }
+        CLOSE_CURLY: {
+          location: (8,16,8,16)
+        }
+        Block: {
+          location: (8,17,10,2)
+          Text: {
+            location: (8,17,9,5)
+          }
+          Interpolation: {
+            location: (9,6,9,10)
+            OPEN_CURLY: {
+              location: (9,6,9,6)
+            }
+            C_IDENTIFIER: {
+              location: (9,7,9,9)
+            }
+            CLOSE_CURLY: {
+              location: (9,10,9,10)
+            }
+          }
+          Text: {
+            location: (9,11,10,2)
+          }
+        }
+      }
+      ElseBlock: {
+        location: (10,3,12,2)
+        ELSE: {
+          location: (10,3,10,9)
+        }
+        Text: {
+          location: (10,10,12,2)
+        }
+      }
+      ABBREVIATED_END: {
+        location: (12,3,12,5)
+      }
+    }
+    Text: {
+      location: (12,6,15,1)
+    }
+  }
+  Token: {
+    location: (12,6,12,6)
+  }
+}
