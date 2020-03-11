@@ -1,11 +1,10 @@
-Just plain text: \{#FalseAlarm}
+﻿Just plain text: \{#FalseAlarm}
 {#if (condition}
    {"你喜欢吗"}
    {#if ((("Тебе нравиться") }
        Oui, j'aime bien.
    {/if}
    {#else}
-   Dies ist nichts mehr als eine grosse Scheisse!
 {/if}
 
 {#PrettyPrint "Some text here"/}

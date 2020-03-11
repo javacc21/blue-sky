@@ -1,12 +1,12 @@
 Root: {
-  location: (1,1,11,33)
+  location: (1,1,10,33)
   Block: {
-    location: (1,1,11,33)
+    location: (1,1,10,33)
     Text: {
-      location: (1,1,1,32)
+      location: (1,1,1,33)
     }
     IfSection: {
-      location: (2,1,9,5)
+      location: (2,1,8,5)
       IF: {
         location: (2,1,2,5)
       }
@@ -98,38 +98,38 @@ Root: {
         }
       }
       ElseBlock: {
-        location: (7,4,8,50)
+        location: (7,4,7,11)
         ELSE: {
           location: (7,4,7,10)
         }
         Text: {
-          location: (7,11,8,50)
+          location: (7,11,7,11)
         }
       }
       ENDIF: {
-        location: (9,1,9,5)
+        location: (8,1,8,5)
       }
     }
     Text: {
-      location: (9,6,10,1)
+      location: (8,6,9,1)
     }
     UserSection: {
-      location: (11,1,11,32)
+      location: (10,1,10,32)
       START_SECTION: {
-        location: (11,1,11,13)
+        location: (10,1,10,13)
       }
       STRING_LITERAL: {
-        location: (11,15,11,30)
+        location: (10,15,10,30)
       }
       CLOSE_EMPTY: {
-        location: (11,31,11,32)
+        location: (10,31,10,32)
       }
     }
     Text: {
-      location: (11,33,11,33)
+      location: (10,33,10,33)
     }
   }
   Token: {
-    location: (11,33,11,33)
+    location: (10,33,10,33)
   }
 }

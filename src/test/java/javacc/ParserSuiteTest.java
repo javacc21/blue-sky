@@ -21,20 +21,27 @@ public class ParserSuiteTest {
 		TestSuite rootTestSuite = new TestSuite();
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(REPO_ROOT)) {
 			for (Path grammarDir : stream) {
-				Path testfiles = grammarDir.resolve("testfiles");
-				if (Files.exists(testfiles)) {
-					try (DirectoryStream<Path> streamTestFiles = Files.newDirectoryStream(testfiles)) {
-						for (Path testFile : streamTestFiles) {
-							if (!Files.isDirectory(testFile)) {
-								rootTestSuite.addTest(new ParserTest(testFile));
-							}
-						}
-					}
+				Path actualDir = grammarDir.resolve("testfiles/actual");
+				if (Files.exists(actualDir)) {
+					Path expectedDir = grammarDir.resolve("testfiles/expected");
+					addTests(actualDir, actualDir, expectedDir, rootTestSuite);
 				}
 			}
 		} catch (IOException | DirectoryIteratorException e) {
 			System.err.println(e);
 		}
 		return rootTestSuite;
+	}
+
+	private static void addTests(Path testFileOrDir, Path actualDir, Path expectedDir, TestSuite rootTestSuite) throws IOException {
+		try (DirectoryStream<Path> streamTestFileOrDir = Files.newDirectoryStream(testFileOrDir)) {
+			for (Path testFile : streamTestFileOrDir) {
+				if (Files.isDirectory(testFile)) {
+					addTests(testFile, actualDir, expectedDir, rootTestSuite);
+				} else {
+					rootTestSuite.addTest(new ParserTest(testFile, actualDir, expectedDir));
+				}
+			}
+		}
 	}
 }

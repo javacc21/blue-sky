@@ -1,69 +1,75 @@
 Root: {
-  location: (1,1,9,22)
-  IfSection: {
-    location: (1,1,10,5)
-    IF: {
-      location: (1,1,1,5)
+  location: (1,1,8,22)
+  Block: {
+    location: (1,1,9,5)
+    Text: {
+      location: (1,1,1,1)
     }
-    C_IDENTIFIER: {
-      location: (1,6,1,13)
-    }
-    CLOSE_CURLY: {
-      location: (1,14,1,14)
-    }
-    Block: {
-      location: (1,15,6,8)
-      Text: {
-        location: (1,15,3,4)
+    IfSection: {
+      location: (1,2,9,5)
+      IF: {
+        location: (1,2,1,6)
       }
-      UserSection: {
-        location: (3,5,6,7)
-        START_SECTION: {
-          location: (3,5,3,17)
-        }
-        CLOSE_CURLY: {
-          location: (3,19,3,19)
-        }
-        Text: {
-          location: (3,20,6,4)
-        }
-        ABBREVIATED_END: {
-          location: (6,5,6,7)
-        }
+      C_IDENTIFIER: {
+        location: (1,7,1,14)
       }
-      Text: {
-        location: (6,8,6,8)
-      }
-    }
-    ElseBlock: {
-      location: (7,1,9,26)
-      ELSE: {
-        location: (7,1,7,8)
+      CLOSE_CURLY: {
+        location: (1,15,1,15)
       }
       Block: {
-        location: (7,9,9,26)
+        location: (1,16,5,8)
         Text: {
-          location: (7,9,9,4)
+          location: (1,16,3,4)
         }
         UserSection: {
-          location: (9,5,9,21)
+          location: (3,5,5,7)
           START_SECTION: {
-            location: (9,5,9,18)
+            location: (3,5,3,17)
           }
-          CLOSE_EMPTY: {
-            location: (9,20,9,21)
+          CLOSE_CURLY: {
+            location: (3,19,3,19)
+          }
+          Text: {
+            location: (3,20,5,4)
+          }
+          ABBREVIATED_END: {
+            location: (5,5,5,7)
           }
         }
         Text: {
-          location: (9,22,9,26)
+          location: (5,8,5,8)
         }
       }
-    }
-    ENDIF: {
-      location: (10,1,10,5)
+      ElseBlock: {
+        location: (6,1,8,26)
+        ELSE: {
+          location: (6,1,6,8)
+        }
+        Block: {
+          location: (6,9,8,26)
+          Text: {
+            location: (6,9,8,4)
+          }
+          UserSection: {
+            location: (8,5,8,21)
+            START_SECTION: {
+              location: (8,5,8,18)
+            }
+            CLOSE_EMPTY: {
+              location: (8,20,8,21)
+            }
+          }
+          Text: {
+            location: (8,22,8,26)
+          }
+        }
+      }
+      ENDIF: {
+        location: (9,1,9,5)
+      }
     }
   }
   Token: {
-    location: (9,22,9,22)
+    location: (8,22,8,22)
   }
 }

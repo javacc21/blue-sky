@@ -1,0 +1,42 @@
+Root: {
+  location: (1,1,1,31)
+  IfSection: {
+    location: (1,1,1,43)
+    IF: {
+      location: (1,1,1,5)
+    }
+    EqualityExpression: {
+      location: (1,6,1,16)
+      C_IDENTIFIER: {
+        location: (1,6,1,9)
+      }
+      EQUALS2: {
+        location: (1,11,1,12)
+      }
+      C_IDENTIFIER: {
+        location: (1,14,1,16)
+      }
+    }
+    CLOSE_CURLY: {
+      location: (1,17,1,17)
+    }
+    Text: {
+      location: (1,18,1,23)
+    }
+    ElseBlock: {
+      location: (1,24,1,38)
+      ELSE: {
+        location: (1,24,1,30)
+      }
+      Text: {
+        location: (1,31,1,38)
+      }
+    }
+    ENDIF: {
+      location: (1,39,1,43)
+    }
+  }
+  Token: {
+    location: (1,31,1,31)
+  }
+}

@@ -1,0 +1,1 @@
+{#if isActive}ACTIVE{#else if valid}VALID{#else}NULL{/if}

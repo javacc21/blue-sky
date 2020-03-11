@@ -20,8 +20,14 @@ public class ParserTest implements Test, Describable {
 
 	private final Path testFilesDir;
 
-	public ParserTest(Path testFilesDir) {
+	private final Path actualDir;
+
+	private final Path expectedDir;
+
+	public ParserTest(Path testFilesDir, Path actualDir, Path expectedDir) {
 		this.testFilesDir = testFilesDir;
+		this.actualDir = actualDir;
+		this.expectedDir = expectedDir;
 	}
 
 	@Override
@@ -39,7 +45,7 @@ public class ParserTest implements Test, Describable {
 	public void run(TestResult result) {
 		try {
 			result.startTest(this);
-			executeTest(this, testFilesDir);
+			executeTest(this, testFilesDir, actualDir, expectedDir);
 		} catch (Throwable e) {
 			result.addError(this, e);
 		} finally {
@@ -47,7 +53,7 @@ public class ParserTest implements Test, Describable {
 		}
 	}
 
-	private static void executeTest(ParserTest test, Path testFile) throws Exception {
+	private static void executeTest(ParserTest test, Path testFile, Path actualDir, Path expectedDir) throws Exception {
 
 		// Load parser instance
 		String name = testFile.getName(1).toString();
@@ -69,8 +75,8 @@ public class ParserTest implements Test, Describable {
 		Object rootNode = rootNodeMethod.invoke(parserInstance);
 
 		// Check AST
-		Path expectedFile = testFile.getParent()
-				.resolve("expected/" + testFile.getName(testFile.getNameCount() - 1).toString());
+		Path path = actualDir.relativize(testFile);
+		Path expectedFile = expectedDir.resolve(path);
 
 		if (!Files.exists(expectedFile)) {
 			Files.createDirectories(expectedFile.getParent());
@@ -78,8 +84,7 @@ public class ParserTest implements Test, Describable {
 			JSONUtils.dump(rootNode, "", actual);
 			Files.write(expectedFile, actual.toString().getBytes());
 		}
-		
-		
+
 		if (Files.exists(expectedFile)) {
 			StringWriter actual = new StringWriter();
 			JSONUtils.dump(rootNode, "", actual);
