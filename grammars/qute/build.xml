@@ -12,18 +12,12 @@
    <target name="parser-gen" unless="parser.uptodate">
         <mkdir dir="../../bin"/>
         <get 
-            src="https://javacc.com/download/experimental/javacc.jar" 
+            src="https://javacc.com/download/experimental/javacc-full.jar" 
             dest="${BIN_DIR}"
             quiet="true"
             ignoreerrors="true"
             usetimestamp="true" />
-        <get
-            src="https://javacc.com/download/freemarker.jar"
-            dest="${BIN_DIR}"
-            quiet="true"
-            ignoreerrors="true"
-            usetimestamp="true" />
-        <java jar="${BIN_DIR}/javacc.jar" fork="true" failonerror="true" >
+        <java jar="${BIN_DIR}/javacc-full.jar" fork="true" failonerror="true" >
             <arg value="QUTE.javacc"/>
         </java>
    </target>
