@@ -22,7 +22,7 @@
         </java>
    </target>
    <target name="compile" depends="parser-gen">
-       <javac srcdir="." includeantruntime="off" failonerror="true" />
+       <javac srcdir="." includeantruntime="off" failonerror="true" debug="on"/>
        <echo>
            test harness via: java QUTETest &lt;filename&gt;
        </echo>

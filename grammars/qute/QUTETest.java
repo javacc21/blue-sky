@@ -6,8 +6,7 @@ public class QUTETest {
         FileReader fr = new FileReader(file);
         QUTEParser parser = new QUTEParser(fr);
         parser.setInputSource(file.toString());
-        parser.Root();
-        Node rootNode = parser.rootNode();
+        Node rootNode = parser.Root();
         if (dumpTree) {
             Nodes.dump(rootNode, "");
         }

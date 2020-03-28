@@ -208,8 +208,11 @@ void Block() : {}
 }
 
 
-void Root() :{}
+Root Root() :{}
 {
    [Block()]
    <EOF>
+   {
+      return CURRENT_NODE;
+   }
 }
