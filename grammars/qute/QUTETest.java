@@ -2,10 +2,12 @@ import java.io.*;
 import qute.*;
 
 public class QUTETest {
+
     static public void parseFile(File file, boolean dumpTree) throws IOException, ParseException {
         FileReader fr = new FileReader(file);
         QUTEParser parser = new QUTEParser(fr);
         parser.setInputSource(file.toString());
+        parser.setTracingEnabled(true);
         parser.Root();
 	Node rootNode = parser.rootNode();
         if (dumpTree) {
