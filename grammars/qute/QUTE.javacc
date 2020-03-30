@@ -111,7 +111,7 @@ void ForSection() : {}
    Expression()
    <CLOSE_CURLY>
    [Block()]
-   (<ENDFOR><ABBREVIATED_END>)!
+   (<ENDFOR>|<ABBREVIATED_END>)!
 }
 
 void IfSection() : {}
