@@ -145,7 +145,7 @@ void IncludeSection() : {}
    Expression()
    <CLOSE_CURLY>
    Block()
-   (<ENDINCLUDE><ABBREVIATED_END>)!
+   (<ENDINCLUDE>|<ABBREVIATED_END>)!
 }
 
 void InsertSection() : {}
@@ -154,7 +154,7 @@ void InsertSection() : {}
    Expression()
    <CLOSE_CURLY>
    Block()
-   (<ENDINSERT><ABBREVIATED_END>)!
+   (<ENDINSERT>|<ABBREVIATED_END>)!
 }
 
 void WithSection() : {}
@@ -163,7 +163,7 @@ void WithSection() : {}
    Expression()
    <CLOSE_CURLY>
    Block()
-   (<ENDWITH><ABBREVIATED_END>)!
+   (<ENDWITH>|<ABBREVIATED_END>)!
 }
 
 void UserSection() : {}
