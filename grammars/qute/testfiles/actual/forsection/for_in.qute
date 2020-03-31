@@ -1,0 +1,14 @@
+{@org.acme.Foo foo}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Qute Hello</title>
+</head>
+<body>
+  <h1>{foo.message}</h1> 
+  {#for foo in baz.foos}
+    <p>Hello {foo.message}!</p> 
+  {/for}
+</body>
+</html>
