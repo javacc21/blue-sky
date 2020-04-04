@@ -1,4 +1,4 @@
-package javacc;
+package com.javacc;
 
 import java.io.IOException;
 import java.nio.file.DirectoryIteratorException;

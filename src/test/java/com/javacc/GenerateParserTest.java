@@ -1,4 +1,4 @@
-package javacc;
+package com.javacc;
 
 import java.nio.file.Path;
 
@@ -45,7 +45,7 @@ public class GenerateParserTest implements Test, Describable {
 		String grammar = name.toUpperCase() + ".javacc";
 		Path grammarFilePath = grammarDir.resolve(grammar);
 		String[] args = new String[] { grammarFilePath.toString() };
-		javacc.Main.mainProgram(args);
+		com.javacc.Main.mainProgram(args);
 	}
 
 }

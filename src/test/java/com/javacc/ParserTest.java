@@ -1,4 +1,4 @@
-package javacc;
+package com.javacc;
 
 import java.io.Reader;
 import java.io.StringReader;
