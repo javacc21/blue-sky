@@ -107,7 +107,7 @@ TOKEN #Literal :
     |
     <#REGULAR_CHAR : ~["\u0000"-"\u001F","\"","\\"]>
     |
-    <STRING_LITERAL : "\"" (<REGULAR_CHAR>|<ESCAPE2>|<ESCAPE1>)* "\""> #StringLiteral
+    <JSON_STRING : "\"" (<REGULAR_CHAR>|<ESCAPE2>|<ESCAPE1>)* "\""> #JSONString
     |
     <#ZERO : "0">
     |
@@ -221,7 +221,7 @@ void DefaultToExpression() : {}
 {
     PrimaryExpression()
     (
-        LOOKAHEAD(<EXCLAM>BaseExpression(), {getToken(2).kind !=C_IDENTIFIER || getToken(3).kind != SIMPLE_EQUALS})
+        LOOKAHEAD(<EXCLAM>BaseExpression(), {getToken(2).getType() !=TokenType.C_IDENTIFIER || getToken(3).getType() != TokenType.SIMPLE_EQUALS})
         <EXCLAM>PrimaryExpression()
     )*
     [

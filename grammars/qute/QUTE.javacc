@@ -82,7 +82,7 @@ MORE :
    <CLOSE_EMPTY : "/}"> : QUTE_TEXT
 }
 
-void ParameterDeclaration() : {}
+void ParameterDeclaration() ! : {}
 {
    <START_PARAMETER_DECL>
    <C_IDENTIFIER>
@@ -94,7 +94,7 @@ void Interpolation() ! : {}
    <OPEN_CURLY>Expression()<CLOSE_CURLY>
 }
 
-void EachSection() : {}
+void EachSection() ! : {}
 {
    <EACH>
    Expression()
@@ -103,7 +103,7 @@ void EachSection() : {}
    (<ENDEACH>|<ABBREVIATED_END>)!
 }
 
-void ForSection() : {}
+void ForSection()! : {}
 {
    <FOR>
    <C_IDENTIFIER>
@@ -114,7 +114,7 @@ void ForSection() : {}
    (<ENDFOR>|<ABBREVIATED_END>)!
 }
 
-void IfSection() : {}
+void IfSection()! : {}
 {
    <IF>
    Expression()
@@ -139,7 +139,7 @@ void ElseBlock() : {}
    Block()
 }
 
-void IncludeSection() : {}
+void IncludeSection()! : {}
 {
    <QUTE_INCLUDE>
    Expression()
@@ -148,7 +148,7 @@ void IncludeSection() : {}
    (<ENDINCLUDE>|<ABBREVIATED_END>)!
 }
 
-void InsertSection() : {}
+void InsertSection() !: {}
 {
    <INSERT>
    Expression()
@@ -157,7 +157,7 @@ void InsertSection() : {}
    (<ENDINSERT>|<ABBREVIATED_END>)!
 }
 
-void WithSection() : {}
+void WithSection()! : {}
 {
    <WITH>
    Expression()
@@ -208,7 +208,7 @@ void Block() : {}
 }
 
 
-void Root()! :{}
+void Root() ! :{}
 {
    [Block()]
    <EOF>
