@@ -100,7 +100,7 @@ void EachSection() ! : {}
    Expression()
    <CLOSE_CURLY>
    Block()
-   (<ENDEACH>|<ABBREVIATED_END>)!
+   (<ENDEACH>|<ABBREVIATED_END>)
 }
 
 void ForSection()! : {}
@@ -111,7 +111,7 @@ void ForSection()! : {}
    Expression()
    <CLOSE_CURLY>
    [Block()]
-   (<ENDFOR>|<ABBREVIATED_END>)!
+   (<ENDFOR>|<ABBREVIATED_END>)
 }
 
 void IfSection()! : {}
@@ -122,7 +122,7 @@ void IfSection()! : {}
    Block()
    (ElseIfSection())*
    [ElseBlock()]
-   (<ENDIF>|<ABBREVIATED_END>)!
+   (<ENDIF>|<ABBREVIATED_END>)
 }
 
 void ElseIfSection() : {}
@@ -145,7 +145,7 @@ void IncludeSection()! : {}
    Expression()
    <CLOSE_CURLY>
    Block()
-   (<ENDINCLUDE>|<ABBREVIATED_END>)!
+   (<ENDINCLUDE>|<ABBREVIATED_END>)
 }
 
 void InsertSection() !: {}
@@ -154,7 +154,7 @@ void InsertSection() !: {}
    Expression()
    <CLOSE_CURLY>
    Block()
-   (<ENDINSERT>|<ABBREVIATED_END>)!
+   (<ENDINSERT>|<ABBREVIATED_END>)
 }
 
 void WithSection()! : {}
@@ -163,7 +163,7 @@ void WithSection()! : {}
    Expression()
    <CLOSE_CURLY>
    Block()
-   (<ENDWITH>|<ABBREVIATED_END>)!
+   (<ENDWITH>|<ABBREVIATED_END>)
 }
 
 void UserSection() : {}
@@ -176,7 +176,7 @@ void UserSection() : {}
           <CLOSE_CURLY>
           Block()
           // This does not check for a mismatch between the start and end tag.
-          (<END_SECTION>|<ABBREVIATED_END>)!
+          (<END_SECTION>|<ABBREVIATED_END>)
        )
    )
 }
@@ -189,7 +189,7 @@ void Block() : {}
       |
       ParameterDeclaration()
       |
-      Interpolation()
+      SCAN Interpolation()
       |
       EachSection()
       |
