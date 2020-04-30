@@ -5,6 +5,7 @@ options {
    DEFAULT_LEXICAL_STATE=QUTE_TEXT;
    SPECIAL_TOKENS_ARE_NODES;
    PARSER_PACKAGE="qute";
+   NODE_PACKAGE="qute.ast";
    FAULT_TOLERANT=true;
 }
 
@@ -189,7 +190,7 @@ void Block() : {}
       |
       ParameterDeclaration()
       |
-      SCAN Interpolation()
+      Interpolation()
       |
       EachSection()
       |
