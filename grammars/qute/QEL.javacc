@@ -127,195 +127,162 @@ TOKEN #Delimiter :
    <CLOSE_PAREN : ")">
 }
 
-void Expression() : {}
-{
-    OrExpression()
-}
+Expression : OrExpression;
 
-void OrExpression() : {}
-{
-    AndExpression()
+OrExpression : 
+    AndExpression
     (
-        (<OR>|<OR2>) AndExpression()
+        (<OR>|<OR2>) AndExpression
     )*
-}
+;
 
-void AndExpression() : {}
-{
-    EqualityExpression()
+AndExpression : 
+    EqualityExpression
     (
-        (<AND>|<AND2>) EqualityExpression()
+        (<AND>|<AND2>) EqualityExpression
     )*
-}
+;
 
-void EqualityExpression() : {}
-{
-    RelationalExpression()
+EqualityExpression : 
+    RelationalExpression
     [
         (<EQUALS>|<EQUALS2>|<EQUALS3>)
-        RelationalExpression()
+        RelationalExpression
     ]
-}
+;
 
-void RelationalExpression() : {}
-{
-    RangeExpression()
+RelationalExpression : 
+    RangeExpression
     [
         (<GT>|<GE>|<LT>|<LE>|<ALT_GT>|<ALT_GE>|<ALT_LE>|<ALT_LT>)
-        RangeExpression()
+        RangeExpression
     ]
-}
+;
 
-void RangeExpression() : {}
-{
-    AdditiveExpression()
+RangeExpression : 
+    AdditiveExpression
     [
        <DOT_DOT>
        [
-         LOOKAHEAD(AdditiveExpression())
-          AdditiveExpression()
+         LOOKAHEAD AdditiveExpression
        ]
     ]
-}
+;
 
-void AdditiveExpression() : {}
-{
-    MultiplicativeExpression()
+AdditiveExpression : 
+    MultiplicativeExpression
     (
-        LOOKAHEAD(<PLUS>|<MINUS>)
            (<PLUS>|<MINUS>)
-           MultiplicativeExpression()
+           MultiplicativeExpression
     )*
-}
+;
 
-void MultiplicativeExpression() : {}
-{
-    UnaryExpression()
+MultiplicativeExpression : 
+    UnaryExpression
     (
           (<TIMES>|<DIVIDE>)
-          UnaryExpression()
+          UnaryExpression
     )*
-}
+;
 
-void UnaryExpression() #void : {}
-{
-    UnaryPlusMinusExpression()
+UnaryExpression #void : 
+    UnaryPlusMinusExpression
     |
-    NotExpression()
+    NotExpression
     |
-    DefaultToExpression()
-}
+    DefaultToExpression
+;
 
-void UnaryPlusMinusExpression() : {}
-{
-    (<PLUS>|<MINUS>) DefaultToExpression()
-}
+UnaryPlusMinusExpression : 
+    (<PLUS>|<MINUS>) DefaultToExpression
+;
 
-void NotExpression() : {}
-{
+NotExpression : 
     <EXCLAM>
-    DefaultToExpression()
-}
+    DefaultToExpression
+;
 
-void DefaultToExpression() : {}
-{
-    PrimaryExpression()
+DefaultToExpression : 
+    PrimaryExpression
     (
-        LOOKAHEAD(<EXCLAM>BaseExpression(), {getToken(2).getType() !=TokenType.C_IDENTIFIER || getToken(3).getType() != TokenType.SIMPLE_EQUALS})
-        <EXCLAM>PrimaryExpression()
+        LOOKAHEAD(<EXCLAM>BaseExpression, {getToken(2).getType() !=TokenType.C_IDENTIFIER || getToken(3).getType() != TokenType.SIMPLE_EQUALS})
+        <EXCLAM>PrimaryExpression
     )*
     [
-      LOOKAHEAD(1) //This seems to be necessary to prevent a warning, but it seems like maybe this is a bug.
        <EXCLAM>
     ]
-}
+;
 
-void PrimaryExpression() : {}
-{
-  BaseExpression()
+PrimaryExpression : 
+  BaseExpression
   (
     LOOKAHEAD(<DOT>|<OPEN_BRACKET>|<OPEN_PAREN>)
     (
-      DotKey()
+      DotKey
       |
-      DynamicKey()
+      DynamicKey
       |
-      MethodInvoke()            
+      MethodInvoke            
     )
   )*
-}
+;
 
-void BaseExpression() : {}
-{
+BaseExpression : 
     <C_IDENTIFIER>
     |
-    NumberLiteral()    
+    NumberLiteral    
     |
-    StringLiteral()
+    StringLiteral
     |
-    BooleanLiteral()
+    BooleanLiteral
     |
-    NullLiteral()
+    NullLiteral
     |
-    Parenthesis()
-}
+    Parenthesis
+;
 
 
-void DotKey() #void : {}
-{
+DotKey #void : 
     <DOT>
     (<C_IDENTIFIER>|<TIMES>)
-}
+;
 
-void DynamicKey() #void : {}
-{
-    <OPEN_BRACKET>Expression()<CLOSE_BRACKET>
-}
+DynamicKey #void : 
+    <OPEN_BRACKET>Expression<CLOSE_BRACKET>
+;
 
-void MethodInvoke() #void : {}
-{
-  <OPEN_PAREN>[ArgsList()]<CLOSE_PAREN>
-}
+MethodInvoke #void : 
+  <OPEN_PAREN>[ArgsList]<CLOSE_PAREN>
+;
 
-void ArgsList() #void : {}
-{
+ArgsList #void : 
     (
-        PositionalArgsList()!
+        PositionalArgsList!
     )
-}
+;
 
-void PositionalArgsList() : {}
-{
-    Expression()
+PositionalArgsList : 
+    Expression
     (
        [<COMMA>]
-       Expression()
+       Expression
     )*
-}
+;
 
-void StringLiteral() : {}
-{
-    <STRING_LITERAL>|<RAW_STRING>
-}
+StringLiteral : <STRING_LITERAL>|<RAW_STRING>;
 
-void Parenthesis() : {}
-{
+Parenthesis : 
    <OPEN_PAREN>
-   Expression()
+   Expression
    <CLOSE_PAREN>!
-}
+;
 
-void NumberLiteral() : {}
-{
+NumberLiteral : 
     <INTEGER>|<DECIMAL>
-}
+;
 
-void BooleanLiteral() : {}
-{
+BooleanLiteral : 
     <TRUE>|<FALSE>
-}
+;
 
-void NullLiteral() : {}
-{
-    <NULL>
-}
+NullLiteral : <NULL>;

@@ -12,7 +12,6 @@ options {
 INCLUDE("QEL.javacc")
 
 TOKEN : 
-{
    <#NO_OPEN_CURLY: ~["{"]>
    |
    <#ESCAPED_OPEN_CURLY: "\\{">
@@ -58,159 +57,138 @@ TOKEN :
    <END_SECTION : "{/" (<ASCII_LETTER>)+ (<WS>)? "}">
    |
    <START_PARAMETER_DECL : "{@" <C_IDENTIFIER> (<DOT>|<C_IDENTIFIER>)+ > : QUTE_EXPRESSION
- }
+ ;
 
-MORE :
-{
-   <OPEN_COMMENT : "{!"> : IN_COMMENT
-}
+MORE : <OPEN_COMMENT : "{!"> : IN_COMMENT;
 
 <IN_COMMENT> MORE :
-{
    <~[]>
-}
+;
 
 <IN_COMMENT> SPECIAL_TOKEN : 
-{
    <CLOSE_COMMENT: "!}"> #Comment : QUTE_TEXT
-}
+;
 
 
 <QUTE_EXPRESSION> TOKEN :
-{
    <CLOSE_CURLY : "}"> : QUTE_TEXT
    |
    <CLOSE_EMPTY : "/}"> : QUTE_TEXT
-}
+;
 
-void ParameterDeclaration() ! : {}
-{
+ParameterDeclaration ! : 
    <START_PARAMETER_DECL>
    <C_IDENTIFIER>
    <CLOSE_CURLY>   
-}
+;
 
-void Interpolation() ! : {}
-{
-   <OPEN_CURLY>Expression()<CLOSE_CURLY>
-}
+Interpolation ! : <OPEN_CURLY>Expression<CLOSE_CURLY> ;
 
-void EachSection() ! : {}
-{
+EachSection ! :
    <EACH>
-   Expression()
+   Expression
    <CLOSE_CURLY>
-   Block()
+   Block
    (<ENDEACH>|<ABBREVIATED_END>)
-}
+;
 
-void ForSection()! : {}
-{
+ForSection ! : 
    <FOR>
    <C_IDENTIFIER>
    <IN>
-   Expression()
+   Expression
    <CLOSE_CURLY>
-   [Block()]
+   [Block]
    (<ENDFOR>|<ABBREVIATED_END>)
-}
+;
 
-void IfSection()! : {}
-{
+IfSection! : 
    <IF>
-   Expression()
+   Expression
    <CLOSE_CURLY>
    Block()
-   (ElseIfSection())*
-   [ElseBlock()]
+   (ElseIfSection)*
+   [ElseBlock]
    (<ENDIF>|<ABBREVIATED_END>)
-}
+;
 
-void ElseIfSection() : {}
-{
+ElseIfSection :
    <ELSEIF>
-   Expression()
+   Expression
    <CLOSE_CURLY>!
-   Block()
-}
+   Block
+;
 
-void ElseBlock() : {}
-{
+ElseBlock : 
    <ELSE> 
-   Block()
-}
+   Block
+;
 
-void IncludeSection()! : {}
-{
+IncludeSection! :
    <QUTE_INCLUDE>
-   Expression()
+   Expression
    <CLOSE_CURLY>
-   Block()
+   Block
    (<ENDINCLUDE>|<ABBREVIATED_END>)
-}
+;
 
-void InsertSection() !: {}
-{
+InsertSection !: 
    <INSERT>
-   Expression()
+   Expression
    <CLOSE_CURLY>
-   Block()
+   Block
    (<ENDINSERT>|<ABBREVIATED_END>)
-}
+;
 
-void WithSection()! : {}
-{
+WithSection! : 
    <WITH>
-   Expression()
+   Expression
    <CLOSE_CURLY>
-   Block()
+   Block
    (<ENDWITH>|<ABBREVIATED_END>)
-}
+;
 
-void UserSection() : {}
-{
-   <START_SECTION>[Expression()]
+UserSection :
+   <START_SECTION>[Expression]
    (
        <CLOSE_EMPTY>!
        |
        (
           <CLOSE_CURLY>
-          Block()
+          Block
           // This does not check for a mismatch between the start and end tag.
           (<END_SECTION>|<ABBREVIATED_END>)
        )
    )
-}
+;
 
 
-void Block() : {}
-{
+Block : 
    (
       <TEXT>
       |
-      ParameterDeclaration()
+      ParameterDeclaration
       |
-      Interpolation()
+      Interpolation
       |
-      EachSection()
+      EachSection
       |
-      ForSection()
+      ForSection
       |
-      IfSection()
+      IfSection
       |
-      IncludeSection()
+      IncludeSection
       |
-      InsertSection()
+      InsertSection
       |
-      WithSection()
+      WithSection
       |
-      UserSection()
+      UserSection
    )+
-}
+;
 
 
-void Root() ! :{}
-{
-   [Block()]
+Root ! :
+   [Block]
    <EOF>
-}
+;
