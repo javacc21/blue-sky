@@ -106,7 +106,7 @@ IfSection! :
    <IF>
    Expression
    <CLOSE_CURLY>
-   Block()
+   Block
    (ElseIfSection)*
    [ElseBlock]
    (<ENDIF>|<ABBREVIATED_END>)
