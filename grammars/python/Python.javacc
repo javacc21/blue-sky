@@ -1,0 +1,81 @@
+TABS_TO_SPACES=8;
+DEFAULT_LEXICAL_STATE="PYTHON";
+PRESERVE_LINE_ENDINGS=false;
+PARSER_PACKAGE="com.javacc.python";
+
+INJECT LEXER_CLASS : 
+{
+    private ArrayList<Integer> indents = new ArrayList<>();
+    private int currentIndent = 1, currentLine = 1, parens;
+
+    Token tokenHook(Token tok) {
+        int beginLine = tok.getBeginLine();
+        if (beginLine == currentLine) {
+            // We have not gone to a new line, so nothing to do. 
+            return tok;
+        }
+        currentLine = beginLine;
+        int beginColumn = tok.getBeginColumn();
+        if (beginColumn == currentIndent) {
+            // Okay, nothing to do, no indent or dedent
+            return tok;
+        }
+        if (beginColumn  > currentIndent) { 
+            // handle an indent 
+            indents.add(currentIndent);
+            Token indent = Token.newToken(INDENT, spaces(beginColumn -1), this);
+            setLocationInfo(indent, tok);
+            return indent;
+        }
+        // Now we are supposed to have a DEDENT.
+        boolean dedentProblem = indents.isEmpty() || indents.remove(indents.size()-1) != beginColumn;
+        Token result = dedentProblem ? new InvalidToken(spaces(beginColumn -1), input_stream) : Token.newToken(DEDENT, spaces(beginColumn-1), input_stream);
+        setLocationInfo(result, tok);
+        return result;
+    }
+
+    private void setLocationInfo(Token indentToken, Token tok) {
+       indentToken.setBeginLine(tok.getBeginLine());
+       indentToken.setEndLine(tok.getBeginLine());
+       indentToken.setBeginColumn(1);
+       indentToken.setEndColumn(tok.getBeginColumn() -1);
+       indentToken.setNext(tok);
+       currentIndent = tok.getBeginColumn();
+    }
+
+    private String spaces(int n) {
+        StringBuilder buf = new StringBuilder(n);
+        for (int i=0; i<n; n++) buf.append((char) ' ');
+        return buf.toString();
+    }
+}
+
+<PYTHON> UNPARSED :
+   <EOL : (" ")* "\n">
+   |
+   <TRAILING_COMMENT : "#" (~["\n"])* "\n">
+;
+
+<PYTHON> TOKEN :
+    < LPAREN: "(" > {parens++;}
+|   < RPAREN: ")" > {parens--;}
+|   < LBRACE: "{" > {parens++;}
+|   < RBRACE: "}" > {parens--;}
+|   < LBRACKET: "[" > {parens++;}
+|   < RBRACKET: "]" > {parens--;}
+|   < SEMICOLON: ";" >
+|   < COMMA: "," >
+|   < DOT: "." >
+|   < COLON: ":" >   
+;
+
+
+
+<PHONY> TOKEN : 
+  < INDENT : "indent"> 
+  |
+  < DEDENT : "dedent" > 
+;
+
+void CompilationUnit : <SEMICOLON> <EOF>; // Just a placeholder for now.
+   
