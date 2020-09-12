@@ -6,9 +6,21 @@ PARSER_PACKAGE="com.javacc.python";
 INJECT LEXER_CLASS : 
 {
     private ArrayList<Integer> indents = new ArrayList<>();
-    private int currentIndent = 1, currentLine = 1, parens;
+    private int currentIndent = 1, currentLine = 1, parenthesisNesting, braceNesting, bracketNesting;
+    private boolean lineContinuation; 
 
-    Token tokenHook(Token tok) {
+    Token tokenHook(final Token token) {
+        Token result = token;
+        if (!lineContinuation && parenthesisNesting == 0 && braceNesting == 0 && bracketNesting == 0) {
+            result = handleIndent(token);
+        }
+        if (!Character.isWhitespace(token.getImage().charAt(0))) {
+            lineContinuation = false;
+        }
+        return result;
+    }
+
+    Token handleIndent(Token tok) {
         int beginLine = tok.getBeginLine();
         if (beginLine == currentLine) {
             // We have not gone to a new line, so nothing to do. 
@@ -54,15 +66,17 @@ INJECT LEXER_CLASS :
    <EOL : (" ")* "\n">
    |
    <TRAILING_COMMENT : "#" (~["\n"])* "\n">
+   |
+   <LINE_CONTINUATION : "\\" <EOL>> {lineContinuation = true;}
 ;
 
 <PYTHON> TOKEN :
-    < LPAREN: "(" > {parens++;}
-|   < RPAREN: ")" > {parens--;}
-|   < LBRACE: "{" > {parens++;}
-|   < RBRACE: "}" > {parens--;}
-|   < LBRACKET: "[" > {parens++;}
-|   < RBRACKET: "]" > {parens--;}
+    < LPAREN: "(" > {++parenthesisNesting;}
+|   < RPAREN: ")" > {--parenthesisNesting;}
+|   < LBRACE: "{" > {++braceNesting;}
+|   < RBRACE: "}" > {--braceNesting;}
+|   < LBRACKET: "[" > {++bracketNesting;}
+|   < RBRACKET: "]" > {--bracketNesting;}
 |   < SEMICOLON: ";" >
 |   < COMMA: "," >
 |   < DOT: "." >
