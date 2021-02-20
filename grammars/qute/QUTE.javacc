@@ -6,7 +6,8 @@ options {
    SPECIAL_TOKENS_ARE_NODES;
    PARSER_PACKAGE="qute";
    NODE_PACKAGE="qute.ast";
-   FAULT_TOLERANT=true;
+   FAULT_TOLERANT;
+   DEBUG_FAULT_TOLERANT;
 }
 
 INCLUDE("QEL.javacc")
@@ -76,15 +77,15 @@ MORE : <OPEN_COMMENT : "{!"> : IN_COMMENT;
    <CLOSE_EMPTY : "/}"> : QUTE_TEXT
 ;
 
-ParameterDeclaration ! : 
+ParameterDeclaration : 
    <START_PARAMETER_DECL>
    <C_IDENTIFIER>
    <CLOSE_CURLY>   
 ;
 
-Interpolation ! : <OPEN_CURLY>Expression<CLOSE_CURLY> ;
+Interpolation : <OPEN_CURLY>Expression<CLOSE_CURLY> ;
 
-EachSection ! :
+EachSection :
    <EACH>
    Expression
    <CLOSE_CURLY>
@@ -92,7 +93,7 @@ EachSection ! :
    (<ENDEACH>|<ABBREVIATED_END>)
 ;
 
-ForSection ! : 
+ForSection : 
    <FOR>
    <C_IDENTIFIER>
    <IN>
@@ -102,7 +103,7 @@ ForSection ! :
    (<ENDFOR>|<ABBREVIATED_END>)
 ;
 
-IfSection! : 
+IfSection : 
    <IF>
    Expression
    <CLOSE_CURLY>
@@ -115,7 +116,7 @@ IfSection! :
 ElseIfSection :
    <ELSEIF>
    Expression
-   <CLOSE_CURLY>!
+   <CLOSE_CURLY>
    Block
 ;
 
@@ -124,7 +125,7 @@ ElseBlock :
    Block
 ;
 
-IncludeSection! :
+IncludeSection :
    <QUTE_INCLUDE>
    Expression
    <CLOSE_CURLY>
@@ -132,7 +133,7 @@ IncludeSection! :
    (<ENDINCLUDE>|<ABBREVIATED_END>)
 ;
 
-InsertSection !: 
+InsertSection : 
    <INSERT>
    Expression
    <CLOSE_CURLY>
@@ -140,7 +141,7 @@ InsertSection !:
    (<ENDINSERT>|<ABBREVIATED_END>)
 ;
 
-WithSection! : 
+WithSection : 
    <WITH>
    Expression
    <CLOSE_CURLY>
@@ -151,7 +152,7 @@ WithSection! :
 UserSection :
    <START_SECTION>[Expression]
    (
-       <CLOSE_EMPTY>!
+       <CLOSE_EMPTY>
        |
        (
           <CLOSE_CURLY>
@@ -184,11 +185,11 @@ Block :
       WithSection
       |
       UserSection
-   )+
+   )+!
 ;
 
 
-Root ! :
+Root :
    [Block]
-   <EOF>
+   <EOF>!
 ;

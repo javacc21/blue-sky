@@ -7,11 +7,11 @@ public class QUTETest {
         FileReader fr = new FileReader(file);
         QUTEParser parser = new QUTEParser(fr);
         parser.setInputSource(file.toString());
-        parser.setTracingEnabled(true);
+//        parser.setTracingEnabled(true);
         parser.Root();
-	Node rootNode = parser.rootNode();
+        Node rootNode = parser.rootNode();
         if (dumpTree) {
-            Nodes.dump(rootNode, "");
+            rootNode.dump();
         }
     }
  

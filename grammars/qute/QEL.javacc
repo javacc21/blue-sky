@@ -1,7 +1,6 @@
-options {
-    DEFAULT_LEXICAL_STATE=QUTE_EXPRESSION;
-    FAULT_TOLERANT=true;
-}
+DEFAULT_LEXICAL_STATE=QUTE_EXPRESSION;
+FAULT_TOLERANT;
+DEBUG_FAULT_TOLERANT;
 
 TOKEN :
 {
@@ -257,7 +256,7 @@ MethodInvoke #void :
 
 ArgsList #void : 
     (
-        PositionalArgsList!
+        PositionalArgsList
     )
 ;
 
@@ -274,7 +273,7 @@ StringLiteral : <STRING_LITERAL>|<RAW_STRING>;
 Parenthesis : 
    <OPEN_PAREN>
    Expression
-   <CLOSE_PAREN>!
+   <CLOSE_PAREN>
 ;
 
 NumberLiteral : 

@@ -30,18 +30,18 @@
    <target name="test" depends="compile">
       <echo>Let's parse a file and output the AST.</echo>
       <java classname="QUTETest" classpath="." failonerror="true" >
-          <arg value="./testfiles/test1.qute"/>
+          <arg value="./testfiles/actual/test1.qute"/>
       </java>
       <echo>And another one.</echo>
       <java classname="QUTETest" classpath="." failonerror="true">
-          <arg value="./testfiles/test2.qute"/>
+          <arg value="./testfiles/actual/test2.qute"/>
       </java>
       <echo>And one more.</echo>
       <java classname="QUTETest" classpath="." failonerror="true">
-          <arg value="./testfiles/test3.qute"/>
+          <arg value="./testfiles/actual/test3.qute"/>
       </java>
       <java classname="QUTETest" classpath="." failonerror="true">
-          <arg value="./testfiles/test4.qute"/>
+          <arg value="./testfiles/actual/test4.qute"/>
       </java>
    </target>
 </project>
