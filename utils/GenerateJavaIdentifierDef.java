@@ -44,10 +44,10 @@ public class GenerateJavaIdentifierDef {
 			output += toUnicodeRep(right);
 		}
 		System.out.print(output);
-		if (left > 0xFFFF) {
-			System.out.print(" // " + Integer.toHexString(left));
-			if (left != right) System.out.print("-" + Integer.toHexString(right));
-		}
+//		if (left > 0xFFFF) {
+//			System.out.print(" // " + Integer.toHexString(left));
+//			if (left != right) System.out.print("-" + Integer.toHexString(right));
+//		}
 	}
 
 	static String toUnicodeRep(int ch) {
